@@ -81,12 +81,30 @@ public class Hero : MonoBehaviour
             //State = States.JumpDown;
         }
     }
-
+    //IEnumerator MoreDamage()
+    //{
+    //    yield return new WaitForSeconds(50f);
+    //}
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == Names.Enemy) { Damage(); }
+        if (collision.gameObject.tag == Names.Enemy) 
+        {
+            Damage();
+            Debug.Log("1");
+        }
     }
 
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == Names.Enemy) 
+        {
+            //StartCoroutine(MoreDamage());
+            Damage();
+            Debug.Log("2");
+        }
+    }
+
+    
     private void Damage()
     {
         _animator.SetTrigger(Names.Damage);
