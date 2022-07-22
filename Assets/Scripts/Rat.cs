@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Rat : MonoBehaviour
 {
+    [SerializeField] private BoxCollider2D _boxCollider;
     [SerializeField] private Vector3 _runTrigger = new Vector3(3,3);
     [SerializeField] private Transform _player;
     private Vector3 _playerPosition;
@@ -21,6 +22,7 @@ public class Rat : MonoBehaviour
     }
     private void Start()
     {
+        _boxCollider = GetComponent<BoxCollider2D>();
         _start_position = transform.position;
         _playerPosition = _player.position;
         _rb = GetComponent<Rigidbody2D>();
@@ -38,6 +40,10 @@ public class Rat : MonoBehaviour
             if(isGrounded) _animator.SetBool(Names.Run, false); 
         }
 
+        if (_sprite.flipX == true)
+            _boxCollider.offset = new Vector2(-0.2216978f, 0.2526783f);
+        else 
+            _boxCollider.offset = new Vector2(0.7117f, 0.2526783f);
     }
     private void Run()
     {
@@ -46,6 +52,8 @@ public class Rat : MonoBehaviour
         Vector3 _dir = _player.transform.position;
         transform.position = Vector3.MoveTowards(transform.position, _dir, _speed * Time.deltaTime);
         _sprite.flipX = _dir.x - transform.position.x < 0.0f;
+        
+
     }
     private void CheckGround()
     {
@@ -53,4 +61,11 @@ public class Rat : MonoBehaviour
         isGrounded = collider.Length > 1;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == Names.Player)
+        {
+            _animator.SetTrigger(Names.Attack);
+        }
+    }
 }
