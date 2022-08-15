@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Rat : MonoBehaviour
 {
-    [SerializeField] private BoxCollider2D _boxCollider;
+   
     [SerializeField] private Vector3 _runTrigger = new Vector3(3,3);
     [SerializeField] private Transform _player;
     private Vector3 _playerPosition;
@@ -22,7 +22,7 @@ public class Rat : MonoBehaviour
     }
     private void Start()
     {
-        _boxCollider = GetComponent<BoxCollider2D>();
+        
         _start_position = transform.position;
         _playerPosition = _player.position;
         _rb = GetComponent<Rigidbody2D>();
@@ -40,10 +40,7 @@ public class Rat : MonoBehaviour
             if(isGrounded) _animator.SetBool(Names.Run, false); 
         }
 
-        if (_sprite.flipX == true)
-            _boxCollider.offset = new Vector2(-0.2216978f, 0.2526783f);
-        else 
-            _boxCollider.offset = new Vector2(0.7117f, 0.2526783f);
+       
     }
     private void Run()
     {
