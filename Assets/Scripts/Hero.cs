@@ -17,7 +17,7 @@ public class Hero : MonoBehaviour
     [SerializeField] private float _jumpForce = 3f;
     private Rigidbody2D _rb;
     private SpriteRenderer _sprite;
-    private bool isGrounded = false;
+    [SerializeField] private bool isGrounded = false;
     public static Vector3 _start_position;
     private Animator _animator;
     private float _prev_val_y; 
@@ -70,7 +70,7 @@ public class Hero : MonoBehaviour
 
     private void CheckGround() 
     {
-        Collider2D[] collider = Physics2D.OverlapCircleAll(transform.position, 0.3f);
+        Collider2D[] collider = Physics2D.OverlapCircleAll(transform.position, 0.4f);
         isGrounded = collider.Length > 1;
 
         if (!isGrounded)
