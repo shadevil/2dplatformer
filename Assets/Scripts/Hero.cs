@@ -8,7 +8,7 @@ public enum States
     Run,
     JumpUp,
     JumpDown,
-    Damage
+    Attack
 }
 public class Hero : MonoBehaviour
 {
@@ -20,7 +20,7 @@ public class Hero : MonoBehaviour
     [SerializeField] private bool isGrounded = false;
     public static Vector3 _start_position;
     private Animator _animator;
-    private float _prev_val_y; 
+    //private Transform _transform;
     private States State 
     {
         get { return (States)_animator.GetInteger(Names.State); }
@@ -32,7 +32,7 @@ public class Hero : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _sprite = GetComponentInChildren<SpriteRenderer>();
         _animator = GetComponentInChildren<Animator>();
-        _prev_val_y = transform.position.y;
+        
     }
 
     private void FixedUpdate()
@@ -53,6 +53,10 @@ public class Hero : MonoBehaviour
             Jump();
         }
 
+        if (Input.GetKey(KeyCode.Mouse0))
+        {
+            State = States.Attack;
+        }
     }
     private void Run() 
     {
@@ -61,6 +65,9 @@ public class Hero : MonoBehaviour
         Vector3 _dir = transform.right * Input.GetAxis(Names.Horizontal);
         transform.position = Vector3.MoveTowards(transform.position, transform.position + _dir, _speed * Time.deltaTime);
         _sprite.flipX = _dir.x < 0.0f;
+
+        
+
     }
 
     private void Jump() 

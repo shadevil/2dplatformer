@@ -12,4 +12,6 @@ public static class Names
     public static string Idle = nameof(Idle);
     public static string Damage = nameof(Damage);
     public static string Enemy = nameof(Enemy);
+    public static string Death = nameof(Death);
+    public static string IsLive = nameof(IsLive);
 }
