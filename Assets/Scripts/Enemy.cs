@@ -57,7 +57,7 @@ public class Enemy : MonoBehaviour
 
         Vector3 _dir = _player.transform.position;
         transform.position = Vector3.MoveTowards(transform.position, _dir, _speed * Time.deltaTime);
-        _sprite.flipX = _dir.x - transform.position.x < 0.0f;
+        _sprite.flipX = _dir.x - transform.position.x <= 0.0f;
 
 
     }

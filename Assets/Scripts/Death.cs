@@ -10,12 +10,17 @@ public class Death : MonoBehaviour
     {
         _start = Hero.transform.position;
     }
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.transform.tag == "Player")
         {
+            Debug.Log("Death");
             Hero.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
             Hero.transform.position = _start;
         }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        
     }
 }
