@@ -7,11 +7,14 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Vector3 _runTrigger = new Vector3(3, 3);
     [SerializeField] private Transform _player;
     private Vector3 _playerPosition;
+    private Rigidbody2D _rb;
 
     [SerializeField] private float _speed = 4f;
     [SerializeField] private int _maxHealth = 5;
     private int _currentHealth;
-    private Rigidbody2D _rb;
+
+    private float _dazedTime;
+    [SerializeField] float _startDazedTime;
 
     private SpriteRenderer _sprite;
     private bool isGrounded = false;
@@ -31,6 +34,9 @@ public class Enemy : MonoBehaviour
         _playerPosition = _player.position;
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponentInChildren<Animator>();
+        GetComponent<BoxCollider2D>().enabled = true;
+
+        _rb.bodyType = RigidbodyType2D.Dynamic;
         _animator.SetBool(Names.IsLive, true);
 
         _sprite = GetComponentInChildren<SpriteRenderer>();
@@ -49,7 +55,16 @@ public class Enemy : MonoBehaviour
             if (isGrounded) _animator.SetBool(Names.Run, false);
         }
 
-
+        if (_currentHealth > 0)
+        {    
+            if (_dazedTime <= 0)
+                _speed = 2f;
+            else 
+            {
+                _speed = 0;
+                _dazedTime -= Time.deltaTime;
+            }
+        }
     }
     private void Run()
     {
@@ -79,7 +94,7 @@ public class Enemy : MonoBehaviour
     {
         _animator.SetTrigger(Names.Damage);
         _currentHealth -= _damage;
-        
+        _dazedTime = _startDazedTime;
 
         if (_currentHealth <= 0)
         {
@@ -88,8 +103,12 @@ public class Enemy : MonoBehaviour
 
     }
 
+
     IEnumerator Die()
     {
+        _speed = 0;
+        _rb.bodyType = RigidbodyType2D.Kinematic;
+        GetComponent<BoxCollider2D>().enabled = false;
         _animator.SetBool(Names.IsLive, false);
         yield return new WaitForSeconds(3f);
         StartCoroutine("InvisibleSprite");
@@ -104,9 +123,12 @@ public class Enemy : MonoBehaviour
             _sprite.material.color = color;
             yield return new WaitForSeconds(0.05f);
         }
-        //Destroy(gameObject);
+        Destroy(gameObject);
     }
 
-   
+    private void OnDrawGizmosSelected()
+    {
+        //Gizmos.DrawWireMesh();
+    }
 
 }

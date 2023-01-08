@@ -5,7 +5,7 @@ using System;
 
 public class PlayerCombat : MonoBehaviour
 {
-    private Animator _animator;
+    [SerializeField] private Animator _animator;
     [SerializeField] private Transform _attackPoint;
     [SerializeField] private LayerMask _enemyLayers;
 
@@ -18,7 +18,7 @@ public class PlayerCombat : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetMouseButtonDown(0))
         {
             AttackEnemy();
         }
@@ -30,15 +30,20 @@ public class PlayerCombat : MonoBehaviour
     }
 
     private void AttackEnemy()
-    {   
-        _animator.SetTrigger(Names.Attack);
+    {
+        _animator.SetTrigger("Attack");
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(_attackPoint.position, _attackRange, _enemyLayers);
         foreach (Collider2D enemy in hitEnemies)
         {
+            //StartCoroutine(Wait());
             enemy.GetComponent<Enemy>().TakeDamageEnemy(_attackDamage);
         }
     }
 
+    //IEnumerator Wait()
+    //{
+    //    yield return new WaitForSeconds(1f);
+    //}
     private void OnDrawGizmosSelected()
     {
         if (_attackPoint == null)

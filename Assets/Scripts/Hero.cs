@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum States 
 {
@@ -8,7 +9,7 @@ public enum States
     Run,
     JumpUp,
     JumpDown,
-    Attack
+    Other
 }
 public class Hero : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class Hero : MonoBehaviour
     public static Vector3 _start_position;
     private Animator _animator;
     //private Transform _transform;
+   
     private States State 
     {
         get { return (States)_animator.GetInteger(Names.State); }
@@ -41,8 +43,27 @@ public class Hero : MonoBehaviour
     }
     private void Update()
     {
-        if (isGrounded) State = States.Idle;
+        if (isGrounded && State != States.Other) State = States.Idle;
 
+        if (Input.GetButton(Names.Horizontal) && State != States.Other)
+        {
+            Run();
+        }
+
+        if (isGrounded && Input.GetButtonDown(Names.Jump))
+        {
+            Jump();
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            State = States.Other;
+        }
+
+    }
+
+    public void SetState()
+    {
         if (Input.GetButton(Names.Horizontal))
         {
             Run();
@@ -53,10 +74,7 @@ public class Hero : MonoBehaviour
             Jump();
         }
 
-        if (Input.GetKey(KeyCode.Mouse0))
-        {
-            State = States.Attack;
-        }
+        if (isGrounded) State = States.Idle;
     }
     private void Run() 
     {
