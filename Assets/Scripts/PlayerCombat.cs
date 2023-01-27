@@ -12,6 +12,8 @@ public class PlayerCombat : MonoBehaviour
     private int _attackDamage = 1;
     [SerializeField] private float _attackRange = 0.5f;
 
+    private int numberOfAttacks;
+
     private void Start()
     {
         _animator = GetComponentInChildren<Animator>();
@@ -20,6 +22,11 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            numberOfAttacks++;
+            if (numberOfAttacks > 3)
+            {
+                numberOfAttacks = 0;
+            }
             AttackEnemy();
         }
         if (Input.GetKeyDown(KeyCode.Mouse1))
@@ -32,6 +39,7 @@ public class PlayerCombat : MonoBehaviour
     private void AttackEnemy()
     {
         _animator.SetTrigger("Attack");
+        _animator.SetInteger("NumberOfAttacks", numberOfAttacks);
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(_attackPoint.position, _attackRange, _enemyLayers);
         foreach (Collider2D enemy in hitEnemies)
         {

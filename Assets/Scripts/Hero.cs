@@ -13,10 +13,10 @@ public enum States
 }
 public class Hero : MonoBehaviour
 {
-    [SerializeField] private float _speed = 4f;
+   // [SerializeField] private float _speed = 4f;
     [SerializeField] private int _lives = 5;
-    [SerializeField] private float _jumpForce = 3f;
-    private Rigidbody2D _rb;
+    //[SerializeField] private float _jumpForce = 3f;
+   // private Rigidbody2D _rb;
     private SpriteRenderer _sprite;
     [SerializeField] private bool isGrounded = false;
     public static Vector3 _start_position;
@@ -31,7 +31,7 @@ public class Hero : MonoBehaviour
     private void Start()
     {
         _start_position = transform.position;
-        _rb = GetComponent<Rigidbody2D>();
+       // _rb = GetComponent<Rigidbody2D>();
         _sprite = GetComponentInChildren<SpriteRenderer>();
         _animator = GetComponentInChildren<Animator>();
         
@@ -80,9 +80,9 @@ public class Hero : MonoBehaviour
     {
         if (isGrounded) State = States.Run;
 
-        Vector3 _dir = transform.right * Input.GetAxis(Names.Horizontal);
-        transform.position = Vector3.MoveTowards(transform.position, transform.position + _dir, _speed * Time.deltaTime);
-        _sprite.flipX = _dir.x < 0.0f;
+        //Vector3 _dir = transform.right * Input.GetAxis(Names.Horizontal);
+        //_sprite.flipX = _dir.x < 0.0f;
+        //transform.position = Vector3.MoveTowards(transform.position, transform.position + _dir, _speed * Time.deltaTime);
 
         
 
@@ -90,7 +90,7 @@ public class Hero : MonoBehaviour
 
     private void Jump() 
     {
-        _rb.AddForce(transform.up * _jumpForce, ForceMode2D.Impulse);
+       // _rb.AddForce(transform.up * _jumpForce, ForceMode2D.Impulse);
     }
 
     private void CheckGround() 
