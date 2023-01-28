@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
     [SerializeField] private Vector3 _runTrigger = new Vector3(3, 3);
     [SerializeField] private Transform _player;
@@ -44,7 +44,7 @@ public class Enemy : MonoBehaviour
         color.a = 1f;
         _sprite.material.color = color;
     }
-    private void Update()
+    protected virtual void Update()
     {
         if (transform.position.x - _playerPosition.x >= _runTrigger.x)
         {
@@ -66,7 +66,7 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-    private void Run()
+    protected virtual void Run()
     {
         if (isGrounded) _animator.SetBool(Names.Run, true);
 
@@ -76,13 +76,13 @@ public class Enemy : MonoBehaviour
 
 
     }
-    private void CheckGround()
+    protected virtual void CheckGround()
     {
         Collider2D[] collider = Physics2D.OverlapCircleAll(transform.position, 0.3f);
         isGrounded = collider.Length > 1;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == Names.Player)
         {
@@ -129,6 +129,11 @@ public class Enemy : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         //Gizmos.DrawWireMesh();
+    }
+
+    protected virtual void PlayerApplyDamage()
+    {
+        FindObjectOfType<Hero>().ApplyDamage();
     }
 
 }

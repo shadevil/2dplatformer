@@ -13,16 +13,19 @@ public enum States
 }
 public class Hero : MonoBehaviour
 {
-   // [SerializeField] private float _speed = 4f;
+    // [SerializeField] private float _speed = 4f;
     [SerializeField] private int _lives = 5;
     //[SerializeField] private float _jumpForce = 3f;
-   // private Rigidbody2D _rb;
+    private Rigidbody2D _rb;
     private SpriteRenderer _sprite;
     [SerializeField] private bool isGrounded = false;
     public static Vector3 _start_position;
     private Animator _animator;
+    [SerializeField] private float _prev_val_y;
+    [SerializeField] private Vector2 pushingForse;
+
     //private Transform _transform;
-   
+
     private States State 
     {
         get { return (States)_animator.GetInteger(Names.State); }
@@ -31,7 +34,7 @@ public class Hero : MonoBehaviour
     private void Start()
     {
         _start_position = transform.position;
-       // _rb = GetComponent<Rigidbody2D>();
+        _rb = GetComponent<Rigidbody2D>();
         _sprite = GetComponentInChildren<SpriteRenderer>();
         _animator = GetComponentInChildren<Animator>();
         
@@ -98,40 +101,41 @@ public class Hero : MonoBehaviour
         Collider2D[] collider = Physics2D.OverlapCircleAll(transform.position, 0.4f);
         isGrounded = collider.Length > 1;
 
-        if (!isGrounded)
-        {
-            //if(transform.position.y > _prev_val_y)
-            State = States.JumpUp;
-            //if(transform.position.y < _prev_val_y)
-            //State = States.JumpDown;
-        }
+        //if (!isGrounded)
+        //{
+        //    if(transform.position.y > _prev_val_y)
+        //    State = States.JumpUp;
+        //    if(transform.position.y < _prev_val_y)
+        //    State = States.JumpDown;
+        //}
     }
     //IEnumerator MoreDamage()
     //{
     //    yield return new WaitForSeconds(50f);
     //}
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == Names.Enemy) 
-        {
-            Damage();
-            Debug.Log("1");
-        }
-    }
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.tag == Names.Enemy) 
+    //    {
+    //        ApplyDamage();
+    //        Debug.Log("1");
+    //    }
+    //}
 
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == Names.Enemy) 
-        {
-            //StartCoroutine(MoreDamage());
-            Damage();
-            Debug.Log("2");
-        }
-    }
+    //private void OnCollisionStay2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.tag == Names.Enemy) 
+    //    {
+    //        //StartCoroutine(MoreDamage());
+    //        ApplyDamage();
+    //        Debug.Log("2");
+    //    }
+    //}
 
     
-    private void Damage()
+    public void ApplyDamage()
     {
+        _rb.AddForce(new Vector2(pushingForse.x* Input.GetAxis(Names.Horizontal), pushingForse.y), ForceMode2D.Impulse);
         _animator.SetTrigger(Names.Damage);
     }
 
