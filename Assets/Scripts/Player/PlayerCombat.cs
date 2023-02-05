@@ -11,22 +11,24 @@ public class PlayerCombat : MonoBehaviour
 
     private int _attackDamage = 1;
     [SerializeField] private float _attackRange = 0.5f;
+    private int maxAttacks;
 
-    private int numberOfAttacks;
+    public int Attacks { get; private set; }
+
+    public bool IsAttacking { get; private set; }
 
     private void Start()
     {
         _animator = GetComponentInChildren<Animator>();
+        IsAttacking = false;
+        Attacks = 1;
+        maxAttacks = 3;
     }
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            numberOfAttacks++;
-            if (numberOfAttacks > 3)
-            {
-                numberOfAttacks = 0;
-            }
+            IsAttacking = true;
             AttackEnemy();
         }
         if (Input.GetKeyDown(KeyCode.Mouse1))
@@ -38,8 +40,6 @@ public class PlayerCombat : MonoBehaviour
 
     private void AttackEnemy()
     {
-        _animator.SetTrigger("Attack");
-        _animator.SetInteger("NumberOfAttacks", numberOfAttacks);
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(_attackPoint.position, _attackRange, _enemyLayers);
         foreach (Collider2D enemy in hitEnemies)
         {
@@ -57,5 +57,12 @@ public class PlayerCombat : MonoBehaviour
         if (_attackPoint == null)
             return;
         Gizmos.DrawWireSphere(_attackPoint.position, _attackRange);
+    }
+
+    public void EndAttack(int attack)
+    {
+        IsAttacking = false;
+        Attacks++;
+        if (attack >= maxAttacks) Attacks = 1;
     }
 }

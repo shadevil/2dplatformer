@@ -68,6 +68,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask _groundLayer;
     #endregion
 
+
+
     private void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
