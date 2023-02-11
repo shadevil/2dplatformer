@@ -5,12 +5,12 @@ using System;
 
 public class PlayerCombat : MonoBehaviour
 {
-    [SerializeField] private Animator _animator;
-    [SerializeField] private Transform _attackPoint;
-    [SerializeField] private LayerMask _enemyLayers;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Transform attackPoint;
+    [SerializeField] private LayerMask enemyLayers;
 
-    private int _attackDamage = 1;
-    [SerializeField] private float _attackRange = 0.5f;
+    private int attackDamage = 1;
+    [SerializeField] private float attackRange = 0.5f;
     private int maxAttacks;
 
     public int Attacks { get; private set; }
@@ -19,7 +19,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void Start()
     {
-        _animator = GetComponentInChildren<Animator>();
+        animator = GetComponentInChildren<Animator>();
         IsAttacking = false;
         Attacks = 1;
         maxAttacks = 3;
@@ -40,11 +40,11 @@ public class PlayerCombat : MonoBehaviour
 
     private void AttackEnemy()
     {
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(_attackPoint.position, _attackRange, _enemyLayers);
-        foreach (Collider2D enemy in hitEnemies)
+        Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+        foreach (Collider2D damageableObject in hitObjects)
         {
             //StartCoroutine(Wait());
-            enemy.GetComponent<Enemy>().TakeDamageEnemy(_attackDamage);
+            damageableObject.GetComponent<IDamageable>().ApplyDamage(attackDamage);
         }
     }
 
@@ -54,9 +54,9 @@ public class PlayerCombat : MonoBehaviour
     //}
     private void OnDrawGizmosSelected()
     {
-        if (_attackPoint == null)
+        if (attackPoint == null)
             return;
-        Gizmos.DrawWireSphere(_attackPoint.position, _attackRange);
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
     public void EndAttack(int attack)
@@ -65,4 +65,5 @@ public class PlayerCombat : MonoBehaviour
         Attacks++;
         if (attack >= maxAttacks) Attacks = 1;
     }
+
 }

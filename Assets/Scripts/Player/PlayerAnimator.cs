@@ -10,18 +10,13 @@ public class PlayerAnimator : MonoBehaviour
     private PlayerCombat playerCombat;
 
     #region ANIMATIONS
-    private const string PLAYER_IDLE = "Idle";
-    private const string PLAYER_RUN = "Run";
-    private const string PLAYER_JUMP_UP = "JumpUp";
-    private const string PLAYER_JUMP_DOWN = "JumpDown";
-    private const string PLAYER_DAMAGE = "Damage";
-    private const string PLAYER_FIRST_ATTACK = "Attack";
-    private const string PLAYER_SECOND_ATTACK = "Attack2";
-    private const string PLAYER_THIRD_ATTACK = "Attack3";
+
     #endregion
 
-    public bool startedJumping {  private get; set; }
+    public bool startedJumping { private get; set; }
     public bool justLanded { private get; set; }
+
+    public bool IsSquating;
 
     public float currentVelY;
 
@@ -31,6 +26,7 @@ public class PlayerAnimator : MonoBehaviour
         mov = GetComponent<PlayerMovement>();
         playerCombat = GetComponent<PlayerCombat>();
         animator = GetComponent<Animator>();
+        IsSquating = false;
     }
 
     private void LateUpdate()
@@ -43,69 +39,81 @@ public class PlayerAnimator : MonoBehaviour
         //}
 
 
- 
+        if (!Input.GetKey(KeyCode.LeftControl))
+        {
+            IsSquating = false;
+        }
 
         CheckAnimationState();
     }
 
     private void CheckAnimationState()
     {
+        if (IsSquating && Input.GetAxisRaw("Horizontal") != 0 && mov.LastOnGroundTime == 0.2f)
+        {
+            ChangeAnimationState(Names.SquatRun);
+            return;
+        }
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            IsSquating = true;
+            ChangeAnimationState(Names.Squat);
+            return;
+        }
 
         if (playerCombat.IsAttacking && playerCombat.Attacks == 1)
         {
-            ChangeAnimationState(PLAYER_FIRST_ATTACK);
+            ChangeAnimationState(Names.Attack);
             return;
         }
 
         else if (playerCombat.IsAttacking && playerCombat.Attacks == 2)
         {
-            ChangeAnimationState(PLAYER_SECOND_ATTACK);
+            ChangeAnimationState(Names.Attack2);
             return;
         }
 
         else if (playerCombat.IsAttacking && playerCombat.Attacks == 3)
         {
-            ChangeAnimationState(PLAYER_THIRD_ATTACK);
+            ChangeAnimationState(Names.Attack3);
             return;
         }
 
         if (startedJumping)
-        {            
-            ChangeAnimationState(PLAYER_JUMP_UP);
+        {
+            ChangeAnimationState(Names.JumpUp);
             startedJumping = false;
             return;
         }
 
         if (justLanded)
         {
-            ChangeAnimationState(PLAYER_IDLE);
+            ChangeAnimationState(Names.Idle);
             justLanded = false;
             return;
         }
 
-        if (Input.GetAxisRaw("Horizontal") != 0 && mov.LastOnGroundTime==0.2f)
+        if (Input.GetAxisRaw("Horizontal") != 0 && mov.LastOnGroundTime == 0.2f)
         {
-            ChangeAnimationState(PLAYER_RUN);
+            ChangeAnimationState(Names.Run);
             return;
         }
         else if (Input.GetAxisRaw("Horizontal") == 0 && mov.LastOnGroundTime == 0.2f)
         {
-            ChangeAnimationState(PLAYER_IDLE);
+            ChangeAnimationState(Names.Idle);
             return;
         }
 
-
-
         if (mov.RB.velocity.y < -10 && startedJumping == false)
         {
-            ChangeAnimationState(PLAYER_JUMP_DOWN);
+            ChangeAnimationState(Names.JumpDown);
             return;
         }
 
 
 
     }
-   
+
 
     public void ChangeAnimationState(string newState)
     {
@@ -115,4 +123,7 @@ public class PlayerAnimator : MonoBehaviour
 
         currentState = newState;
     }
+
+
+
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour, IDamageable
 {
     [SerializeField] private Vector3 _runTrigger = new Vector3(3, 3);
     [SerializeField] private Transform _player;
@@ -10,6 +10,7 @@ public abstract class Enemy : MonoBehaviour
     private Rigidbody2D _rb;
 
     [SerializeField] private float _speed = 4f;
+
     [SerializeField] private int _maxHealth = 5;
     private int _currentHealth;
 
@@ -21,8 +22,15 @@ public abstract class Enemy : MonoBehaviour
     public static Vector3 _start_position;
     private Animator _animator;
 
-   
     public float deltaAlpha = 1f;
+
+    [SerializeField] private bool isCollidePlayer = false;
+
+    [SerializeField] private Transform attackPoint;
+    [SerializeField] private LayerMask playerLayer;
+
+    private int attackDamage = 1;
+    [SerializeField] private float attackRange = 0.5f;
     private void FixedUpdate()
     {
         CheckGround();
@@ -84,13 +92,26 @@ public abstract class Enemy : MonoBehaviour
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == Names.Player)
+        if (collision.gameObject.TryGetComponent(out Hero hero))
         {
+            isCollidePlayer = true;
             _animator.SetTrigger(Names.Attack);
         }
     }
 
-    public void TakeDamageEnemy(int _damage)
+    protected virtual void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.TryGetComponent(out Hero hero))       
+            isCollidePlayer = true;
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.TryGetComponent(out Hero hero))
+            isCollidePlayer = false;
+    }
+
+    public void ApplyDamage(int _damage)
     {
         _animator.SetTrigger(Names.Damage);
         _currentHealth -= _damage;
@@ -102,7 +123,6 @@ public abstract class Enemy : MonoBehaviour
         }
 
     }
-
 
     IEnumerator Die()
     {
@@ -126,14 +146,23 @@ public abstract class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        //Gizmos.DrawWireMesh();
-    }
-
     protected virtual void PlayerApplyDamage()
     {
-        FindObjectOfType<Hero>().ApplyDamage();
+        if (isCollidePlayer)
+        {
+            Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, playerLayer);
+            foreach (Collider2D damageableObject in hitObjects)
+            {
+                //StartCoroutine(Wait());
+                damageableObject.GetComponent<Hero>().ApplyDamage(attackDamage);
+            }
+        }
     }
 
+    private void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+            return;
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
 }

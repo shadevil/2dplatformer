@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -8,8 +9,11 @@ public class PlayerMovement : MonoBehaviour
 
     #region COMPONENTS
     public Rigidbody2D RB { get; private set; }
+
+    [SerializeField] private PhysicsMaterial2D material;
     //Script to handle all player animations, all references can be safely removed if you're importing into your own project.
-    public PlayerAnimator AnimHandler { get; private set; }
+    [SerializeField] private PlayerAnimator AnimHandler;
+    [SerializeField] private PlayerCombat PlayerCombat;
     #endregion
 
     #region STATE PARAMETERS
@@ -42,6 +46,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 _lastDashDir;
     private bool _isDashAttacking;
 
+    private float normalSpeed = 6f;
+    private float squatSpeed = 3f;
     #endregion
 
     #region INPUT PARAMETERS
@@ -79,6 +85,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         SetGravityScale(Data.gravityScale);
+        SetSpeed(normalSpeed);
         IsFacingRight = true;
     }
 
@@ -271,6 +278,18 @@ public class PlayerMovement : MonoBehaviour
             SetGravityScale(0);
         }
         #endregion
+
+        if (AnimHandler.IsSquating && Input.GetAxisRaw("Horizontal") != 0 && LastOnGroundTime == 0.2f)
+        {
+            SetSpeed(squatSpeed);
+            Debug.Log("squat");
+        }
+
+        if(PlayerCombat.IsAttacking == false && AnimHandler.IsSquating == false)
+        {
+            SetSpeed(normalSpeed);
+            Debug.Log("run");
+        }
     }
 
     private void FixedUpdate()
@@ -572,6 +591,31 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.DrawWireCube(_backWallCheckPoint.position, _wallCheckSize);
     }
     #endregion
+
+    public void SetDynamicRB()
+    {
+        if (RB.velocity.y == 0)
+        {
+            SetSpeed(normalSpeed);
+        }
+    }
+
+    public void SetStaticRB()
+    {
+        if (RB.velocity.y == 0)
+        {
+            SetSpeed(0f);
+        }
+    }
+
+    private void SetSpeed(float speed)
+    {
+        Data.runMaxSpeed = speed;
+        Data.runAcceleration = speed * 2f / 3f;
+        Data.runDecceleration = speed * 1f / 3f;
+    }
+
+
 }
 
 // created by Dawnosaur :D
