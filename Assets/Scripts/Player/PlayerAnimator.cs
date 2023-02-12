@@ -13,12 +13,14 @@ public class PlayerAnimator : MonoBehaviour
 
     #endregion
 
-    public bool startedJumping { private get; set; }
+    public bool StartedJumping { private get; set; }
     public bool justLanded { private get; set; }
 
     public bool IsSquating;
 
-    public float currentVelY;
+    private bool isJumping;
+
+
 
 
     private void Start()
@@ -27,6 +29,7 @@ public class PlayerAnimator : MonoBehaviour
         playerCombat = GetComponent<PlayerCombat>();
         animator = GetComponent<Animator>();
         IsSquating = false;
+        isJumping = false;
     }
 
     private void LateUpdate()
@@ -44,21 +47,28 @@ public class PlayerAnimator : MonoBehaviour
             IsSquating = false;
         }
 
+        if (mov.LastOnGroundTime == 0.2f)
+            isJumping = false;
+
         CheckAnimationState();
     }
 
     private void CheckAnimationState()
     {
-        if (IsSquating && Input.GetAxisRaw("Horizontal") != 0 && mov.LastOnGroundTime == 0.2f)
+        if (mov.IsSquating || IsSquating && Input.GetAxisRaw("Horizontal") != 0 && mov.LastOnGroundTime == 0.2f)
         {
             ChangeAnimationState(Names.SquatRun);
             return;
         }
-        if (Input.GetKey(KeyCode.LeftControl))
+
+        if (isJumping == false)
         {
-            IsSquating = true;
-            ChangeAnimationState(Names.Squat);
-            return;
+            if (Input.GetKey(KeyCode.LeftControl) || mov.IsSquating)
+            {
+                IsSquating = true;
+                ChangeAnimationState(Names.Squat);
+                return;
+            }
         }
 
         if (playerCombat.IsAttacking && playerCombat.Attacks == 1)
@@ -79,10 +89,11 @@ public class PlayerAnimator : MonoBehaviour
             return;
         }
 
-        if (startedJumping)
+        if (StartedJumping)
         {
             ChangeAnimationState(Names.JumpUp);
-            startedJumping = false;
+            StartedJumping = false;
+            isJumping = true;
             return;
         }
 
@@ -104,14 +115,12 @@ public class PlayerAnimator : MonoBehaviour
             return;
         }
 
-        if (mov.RB.velocity.y < -10 && startedJumping == false)
+        if (mov.RB.velocity.y < -10 && StartedJumping == false)
         {
             ChangeAnimationState(Names.JumpDown);
+            isJumping = true; // в бущем заменить на isFalling
             return;
         }
-
-
-
     }
 
 
@@ -123,7 +132,4 @@ public class PlayerAnimator : MonoBehaviour
 
         currentState = newState;
     }
-
-
-
 }

@@ -80,7 +80,11 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
         Vector3 _dir = _player.transform.position;
         transform.position = Vector3.MoveTowards(transform.position, _dir, _speed * Time.deltaTime);
-        _sprite.flipX = _dir.x - transform.position.x < 0.0f;
+            Vector3 scale = transform.localScale;
+        if (_dir.x - transform.position.x < 0.0f)  
+            scale.x = -1;
+        else  scale.x = 1;
+        transform.localScale = scale;
 
 
     }
