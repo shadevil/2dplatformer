@@ -51,6 +51,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isDashAttacking;
 
     private float normalSpeed = 6f;
+    private float walkSpeed = 4.5f;
     private float squatSpeed = 3f;
     #endregion
 
@@ -301,6 +302,12 @@ public class PlayerMovement : MonoBehaviour
                 item.enabled = false;
             foreach (Collider2D item in positionStand)
                 item.enabled = true;
+        }
+
+        if (Input.GetKey(KeyCode.C) && Input.GetAxisRaw("Horizontal") != 0 && LastOnGroundTime == 0.2f && IsSquating == false && !Input.GetKey(KeyCode.LeftControl))
+        {
+            SetSpeed(walkSpeed);
+            AnimHandler.ChangeAnimationState(Names.Walk);
         }
     }
 

@@ -5,6 +5,7 @@ public static class Names
     public static string Idle = nameof(Idle);
     public static string Jump = nameof(Jump);
     public static string Run = nameof(Run);
+    public static string Walk = nameof(Walk);
     public static string Attack = nameof(Attack);
     public static string Attack2 = nameof(Attack2);
     public static string Attack3 = nameof(Attack3);

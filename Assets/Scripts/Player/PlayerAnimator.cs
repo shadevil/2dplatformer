@@ -71,6 +71,7 @@ public class PlayerAnimator : MonoBehaviour
             }
         }
 
+
         if (playerCombat.IsAttacking && playerCombat.Attacks == 1)
         {
             ChangeAnimationState(Names.Attack);
@@ -88,6 +89,9 @@ public class PlayerAnimator : MonoBehaviour
             ChangeAnimationState(Names.Attack3);
             return;
         }
+
+        if (Input.GetKey(KeyCode.C) && Input.GetAxisRaw("Horizontal") != 0 && mov.LastOnGroundTime == 0.2f)
+            return;
 
         if (StartedJumping)
         {
