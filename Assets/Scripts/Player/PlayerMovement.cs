@@ -304,10 +304,9 @@ public class PlayerMovement : MonoBehaviour
                 item.enabled = true;
         }
 
-        if (Input.GetKey(KeyCode.C) && Input.GetAxisRaw("Horizontal") != 0 && LastOnGroundTime == 0.2f && IsSquating == false && !Input.GetKey(KeyCode.LeftControl))
+        if (AnimHandler.isWalking && Input.GetAxisRaw("Horizontal") != 0 && LastOnGroundTime == 0.2f && IsSquating == false && !Input.GetKey(KeyCode.LeftControl))
         {
             SetSpeed(walkSpeed);
-            AnimHandler.ChangeAnimationState(Names.Walk);
         }
     }
 

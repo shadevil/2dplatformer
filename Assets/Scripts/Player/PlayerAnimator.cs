@@ -16,9 +16,11 @@ public class PlayerAnimator : MonoBehaviour
     public bool StartedJumping { private get; set; }
     public bool justLanded { private get; set; }
 
-    public bool IsSquating;
+    public bool IsSquating{ get; private set; }
 
     private bool isJumping;
+
+    public bool isWalking;
 
 
 
@@ -55,7 +57,7 @@ public class PlayerAnimator : MonoBehaviour
 
     private void CheckAnimationState()
     {
-        if (mov.IsSquating || IsSquating && Input.GetAxisRaw("Horizontal") != 0 && mov.LastOnGroundTime == 0.2f)
+        if ((mov.IsSquating || IsSquating) && Input.GetAxisRaw("Horizontal") != 0 && mov.LastOnGroundTime == 0.2f)
         {
             ChangeAnimationState(Names.SquatRun);
             return;
@@ -90,8 +92,6 @@ public class PlayerAnimator : MonoBehaviour
             return;
         }
 
-        if (Input.GetKey(KeyCode.C) && Input.GetAxisRaw("Horizontal") != 0 && mov.LastOnGroundTime == 0.2f)
-            return;
 
         if (StartedJumping)
         {
@@ -105,6 +105,12 @@ public class PlayerAnimator : MonoBehaviour
         {
             ChangeAnimationState(Names.Idle);
             justLanded = false;
+            return;
+        }
+
+        if (isWalking && Input.GetAxisRaw("Horizontal") != 0 && mov.LastOnGroundTime == 0.2f)
+        {
+            ChangeAnimationState(Names.Walk);
             return;
         }
 

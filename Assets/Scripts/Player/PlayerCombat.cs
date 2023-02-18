@@ -5,7 +5,7 @@ using System;
 
 public class PlayerCombat : MonoBehaviour
 {
-    [SerializeField] private Animator animator;
+    [SerializeField] private PlayerAnimator animator;
     [SerializeField] private Transform attackPoint;
     [SerializeField] private LayerMask enemyLayers;
 
@@ -17,9 +17,9 @@ public class PlayerCombat : MonoBehaviour
 
     public bool IsAttacking { get; private set; }
 
+    private bool attackLock;
     private void Start()
     {
-        animator = GetComponentInChildren<Animator>();
         IsAttacking = false;
         Attacks = 1;
         maxAttacks = 3;
@@ -28,8 +28,12 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            IsAttacking = true;
-            AttackEnemy();
+            attackLock = !animator.IsSquating;
+            if (attackLock)
+            {
+                IsAttacking = true;
+                AttackEnemy();
+            }
         }
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
