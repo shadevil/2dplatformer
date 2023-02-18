@@ -10,6 +10,7 @@ public static class Names
     public static string Attack = nameof(Attack);
     public static string Attack2 = nameof(Attack2);
     public static string Attack3 = nameof(Attack3);
+    public static string AttackInTheFall = nameof(AttackInTheFall);
     public static string StrongAttack = nameof(StrongAttack);
 
     public static string JumpUp = nameof(JumpUp);

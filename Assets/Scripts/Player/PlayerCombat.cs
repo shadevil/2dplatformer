@@ -33,6 +33,18 @@ public class PlayerCombat : MonoBehaviour
     }
     void Update()
     {
+        if (Input.GetMouseButtonDown(0) && mov.RB.velocity.y < -5)
+        {
+            attackLock = !animator.IsSquating;
+            if (attackLock)
+            {
+                IsAttacking = true;
+                mov.SetStaticRB();
+                StartCoroutine(AttackInTheFall());
+                return;
+            }
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             attackLock = !animator.IsSquating;
@@ -47,11 +59,10 @@ public class PlayerCombat : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             attackLock = !animator.IsSquating;
-            if (attackLock)
+            if (attackLock && mov.LastOnGroundTime == 0.2f)
             {
                 IsStrongAttacking = true;
                 mov.SetStaticRB();
-                Debug.Log("qwerty");
                 StartCoroutine(StrongAttack());
             }
         }
@@ -59,8 +70,14 @@ public class PlayerCombat : MonoBehaviour
 
     private IEnumerator StrongAttack()
     { 
-        yield return new WaitForSeconds(0.35f);
+        yield return new WaitForSeconds(0.54f);
         AttackEnemy(attackDamage * 2);
+    }
+
+    private IEnumerator AttackInTheFall()
+    {
+        yield return new WaitForSeconds(0.45f);
+        AttackEnemy(attackDamage);
     }
 
     private void AttackEnemy(int attackDamage)

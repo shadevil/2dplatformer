@@ -13,7 +13,7 @@ public class PlayerAnimator : MonoBehaviour
 
     #endregion
 
-    public bool StartedJumping { private get; set; }
+    public bool StartedJumping;
     public bool justLanded { private get; set; }
 
     public bool IsSquating{ get; private set; }
@@ -80,7 +80,13 @@ public class PlayerAnimator : MonoBehaviour
             }
         }
 
-        if (playerCombat.IsStrongAttacking)
+        if (playerCombat.IsAttacking && mov.RB.velocity.y < -1)
+        {
+            ChangeAnimationState(Names.AttackInTheFall);
+            return;
+        }
+
+        if (playerCombat.IsStrongAttacking && mov.LastOnGroundTime == 0.2f)
         {
             ChangeAnimationState(Names.StrongAttack);
             return;
