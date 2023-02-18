@@ -6,6 +6,7 @@ using System;
 public class PlayerCombat : MonoBehaviour
 {
     [SerializeField] private PlayerAnimator animator;
+    [SerializeField] private PlayerMovement mov;
     [SerializeField] private Transform attackPoint;
     [SerializeField] private LayerMask enemyLayers;
 
@@ -17,7 +18,13 @@ public class PlayerCombat : MonoBehaviour
 
     public bool IsAttacking { get; private set; }
 
+    public bool IsStrongAttacking { get; private set; }
+
     private bool attackLock;
+
+    
+
+
     private void Start()
     {
         IsAttacking = false;
@@ -32,17 +39,31 @@ public class PlayerCombat : MonoBehaviour
             if (attackLock)
             {
                 IsAttacking = true;
-                AttackEnemy();
+                mov.SetStaticRB();
+                AttackEnemy(attackDamage);
             }
         }
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+
+        if (Input.GetMouseButtonDown(1))
         {
-            Debug.Log("mouse1");
+            attackLock = !animator.IsSquating;
+            if (attackLock)
+            {
+                IsStrongAttacking = true;
+                mov.SetStaticRB();
+                Debug.Log("qwerty");
+                StartCoroutine(StrongAttack());
+            }
         }
-       
     }
 
-    private void AttackEnemy()
+    private IEnumerator StrongAttack()
+    { 
+        yield return new WaitForSeconds(0.35f);
+        AttackEnemy(attackDamage * 2);
+    }
+
+    private void AttackEnemy(int attackDamage)
     {
         Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
         foreach (Collider2D damageableObject in hitObjects)
@@ -68,6 +89,12 @@ public class PlayerCombat : MonoBehaviour
         IsAttacking = false;
         Attacks++;
         if (attack >= maxAttacks) Attacks = 1;
+    }
+
+    public void EndStrongAttack()
+    {
+        IsAttacking = false;
+        IsStrongAttacking = false;
     }
 
 }

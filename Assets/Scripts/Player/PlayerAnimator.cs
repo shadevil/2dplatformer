@@ -34,6 +34,13 @@ public class PlayerAnimator : MonoBehaviour
         isJumping = false;
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            isWalking = !isWalking;
+        }
+    }
     private void LateUpdate()
     {
 
@@ -73,6 +80,11 @@ public class PlayerAnimator : MonoBehaviour
             }
         }
 
+        if (playerCombat.IsStrongAttacking)
+        {
+            ChangeAnimationState(Names.StrongAttack);
+            return;
+        }
 
         if (playerCombat.IsAttacking && playerCombat.Attacks == 1)
         {
@@ -91,7 +103,6 @@ public class PlayerAnimator : MonoBehaviour
             ChangeAnimationState(Names.Attack3);
             return;
         }
-
 
         if (StartedJumping)
         {

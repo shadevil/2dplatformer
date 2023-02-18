@@ -295,7 +295,7 @@ public class PlayerMovement : MonoBehaviour
                 item.enabled = true;
         }
 
-        if(PlayerCombat.IsAttacking == false && AnimHandler.IsSquating == false && !Physics2D.OverlapBox(topCheckPoint.position, topCheckSize, 0, groundLayer))
+        if(PlayerCombat.IsAttacking == false && PlayerCombat.IsStrongAttacking == false && AnimHandler.IsSquating == false && !Physics2D.OverlapBox(topCheckPoint.position, topCheckSize, 0, groundLayer))
         {
             SetSpeed(normalSpeed);
             foreach (Collider2D item in positionSquat)
@@ -304,7 +304,7 @@ public class PlayerMovement : MonoBehaviour
                 item.enabled = true;
         }
 
-        if (AnimHandler.isWalking && Input.GetAxisRaw("Horizontal") != 0 && LastOnGroundTime == 0.2f && IsSquating == false && !Input.GetKey(KeyCode.LeftControl))
+        if (PlayerCombat.IsAttacking == false && PlayerCombat.IsStrongAttacking == false && AnimHandler.isWalking && Input.GetAxisRaw("Horizontal") != 0 && LastOnGroundTime == 0.2f && IsSquating == false && !Input.GetKey(KeyCode.LeftControl))
         {
             SetSpeed(walkSpeed);
         }
@@ -614,7 +614,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void SetDynamicRB()
     {
-        if (RB.velocity.y == 0)
+        if (LastOnGroundTime == 0.2f)
         {
             SetSpeed(normalSpeed);
         }
@@ -622,7 +622,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void SetStaticRB()
     {
-        if (RB.velocity.y == 0)
+        if (LastOnGroundTime == 0.2f)
         {
             SetSpeed(0f);
         }

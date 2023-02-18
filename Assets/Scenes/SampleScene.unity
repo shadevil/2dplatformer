@@ -7496,11 +7496,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 869639283}
+  mov: {fileID: 869639282}
   attackPoint: {fileID: 1428653917}
   enemyLayers:
     serializedVersion: 2
     m_Bits: 128
   attackRange: 1
+  StrongAttackLock: 0
 --- !u!70 &869639278
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
