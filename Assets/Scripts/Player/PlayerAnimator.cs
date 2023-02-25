@@ -64,6 +64,11 @@ public class PlayerAnimator : MonoBehaviour
 
     private void CheckAnimationState()
     {
+        if (currentState == Names.DeathFromThorns)
+        {
+            return;
+        }
+
         if ((mov.IsSquating || IsSquating) && Input.GetAxisRaw("Horizontal") != 0 && mov.LastOnGroundTime == 0.2f)
         {
             ChangeAnimationState(Names.SquatRun);
