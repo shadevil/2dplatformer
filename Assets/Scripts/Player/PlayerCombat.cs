@@ -25,6 +25,7 @@ public class PlayerCombat : MonoBehaviour
     
 
 
+
     private void Start()
     {
         IsAttacking = false;
@@ -33,7 +34,7 @@ public class PlayerCombat : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && mov.RB.velocity.y < -5)
+        if (Input.GetMouseButtonDown(0) && mov.RB.velocity.y > 3 && mov.LastOnGroundTime != 0.2f)
         {
             attackLock = !animator.IsSquating;
             if (attackLock)

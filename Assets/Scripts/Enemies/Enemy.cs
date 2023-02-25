@@ -123,19 +123,29 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
         if (_currentHealth <= 0)
         {
-            StartCoroutine(Die());
+            Die();
         }
 
     }
 
-    IEnumerator Die()
+    public void Die()
+    {
+        StartCoroutine(CoroutineDie());
+    }
+
+    public void DieFromThorns()
+    { 
+    
+    }
+
+    IEnumerator CoroutineDie()
     {
         _speed = 0;
         _rb.bodyType = RigidbodyType2D.Kinematic;
         GetComponent<BoxCollider2D>().enabled = false;
         _animator.SetBool(Names.IsLive, false);
         yield return new WaitForSeconds(3f);
-        StartCoroutine("InvisibleSprite");
+        StartCoroutine(InvisibleSprite());
         
     }
     IEnumerator InvisibleSprite()

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Hero : MonoBehaviour
+public class Hero : MonoBehaviour, IDamageable
 {
     [SerializeField] private float lives = 5;
     private Rigidbody2D _rb;
@@ -23,7 +23,7 @@ public class Hero : MonoBehaviour
         }
     }
 
-    public void ApplyDamage(float damage)
+    public void ApplyDamage(int damage)
     {
         //_rb.AddForce(new Vector2(pushingForse.x * Input.GetAxis(Names.Horizontal), pushingForse.y), ForceMode2D.Impulse);
         lives -= damage;
@@ -35,9 +35,14 @@ public class Hero : MonoBehaviour
         }
     }
 
-    private void Die()
+    public void Die()
     {
         animator.ChangeAnimationState(Names.Death);
+    }
+
+    public void DieFromThorns()
+    {
+        animator.ChangeAnimationState(Names.DeathFromThorns);
     }
 }
 

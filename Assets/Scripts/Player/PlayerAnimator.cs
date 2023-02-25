@@ -80,7 +80,7 @@ public class PlayerAnimator : MonoBehaviour
             }
         }
 
-        if (playerCombat.IsAttacking && mov.RB.velocity.y < -1)
+        if (playerCombat.IsAttacking && mov.RB.velocity.y > 3 && mov.LastOnGroundTime != 0.2f)
         {
             ChangeAnimationState(Names.AttackInTheFall);
             return;

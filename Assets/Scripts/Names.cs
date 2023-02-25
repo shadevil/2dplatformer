@@ -15,8 +15,10 @@ public static class Names
 
     public static string JumpUp = nameof(JumpUp);
     public static string JumpDown = nameof(JumpDown);
-    public static string Death = nameof(Death);
     public static string Damage = nameof(Damage);
+
+    public static string Death = nameof(Death);
+    public static string DeathFromThorns = nameof(DeathFromThorns);
 
     public static string Squat = nameof(Squat);
     public static string SquatRun = nameof(SquatRun);
