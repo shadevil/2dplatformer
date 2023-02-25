@@ -21675,7 +21675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83239d917bbf7a1439037b123a8d60c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _runTrigger: {x: 3.33, y: 3.4, z: 0}
+  _runTrigger: {x: 2, y: 3.4, z: 0}
   _player: {fileID: 869639275}
   _speed: 4
   _maxHealth: 5
@@ -21793,7 +21793,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 99
-  m_Sprite: {fileID: 21300000, guid: d2959183cf41a5b4f8c83e4531895171, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 49178ba7787281d4c82f198438e2cf05, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -21926,15 +21926,64 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2683071968065250629, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
+      propertyPath: m_Size.x
+      value: 1.7039471
+      objectReference: {fileID: 0}
+    - target: {fileID: 2683071968065250629, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
+      propertyPath: m_Size.y
+      value: 0.73850167
+      objectReference: {fileID: 0}
+    - target: {fileID: 2683071968065250629, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.94645023
+      objectReference: {fileID: 0}
+    - target: {fileID: 2683071968065250629, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.14738625
+      objectReference: {fileID: 0}
+    - target: {fileID: 2683071968065250629, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 2.6666667
+      objectReference: {fileID: 0}
+    - target: {fileID: 2683071968065250629, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.y
+      value: 2.6666667
+      objectReference: {fileID: 0}
+    - target: {fileID: 2683071968065250629, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 2.6666667
+      objectReference: {fileID: 0}
+    - target: {fileID: 2683071968065250629, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 2.6666667
+      objectReference: {fileID: 0}
     - target: {fileID: 2683071968065250631, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
       propertyPath: m_Name
       value: Rat
+      objectReference: {fileID: 0}
+    - target: {fileID: 2683071968944574519, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2683071968944574520, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2683071968944574520, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
+      propertyPath: m_SortingOrder
+      value: 99
+      objectReference: {fileID: 0}
+    - target: {fileID: 2683071968944574522, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4243053245725313096, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
       propertyPath: _player
       value: 
       objectReference: {fileID: 869639275}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4243053245725313096, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ae5dac2ab66207543a2be5b2f68cf415, type: 3}
 --- !u!1001 &7237129372297408105
 PrefabInstance:
