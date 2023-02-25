@@ -145,7 +145,7 @@ public class PlayerAnimator : MonoBehaviour
         if (mov.RB.velocity.y < -10 && StartedJumping == false)
         {
             ChangeAnimationState(Names.JumpDown);
-            isJumping = true; // в бущем заменить на isFalling
+            isJumping = true; // в будущем заменить на isFalling
             return;
         }
     }

@@ -15,6 +15,7 @@ public class Hero : MonoBehaviour, IDamageable
     {
         _rb = GetComponent<Rigidbody2D>();
     }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.TryGetComponent(out Enemy enemy))
@@ -44,6 +45,8 @@ public class Hero : MonoBehaviour, IDamageable
     {
         animator.ChangeAnimationState(Names.DeathFromThorns);
     }
+
+ 
 }
 
 
