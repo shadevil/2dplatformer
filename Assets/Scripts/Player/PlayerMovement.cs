@@ -79,6 +79,7 @@ public class PlayerMovement : MonoBehaviour
     #region LAYERS & TAGS
     [Header("Layers & Tags")]
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask topLayer;
     #endregion
 
 
@@ -285,7 +286,7 @@ public class PlayerMovement : MonoBehaviour
             SetGravityScale(0);
         }
         #endregion
-        IsSquating = Physics2D.OverlapBox(topCheckPoint.position, topCheckSize, 0, groundLayer);
+        IsSquating = Physics2D.OverlapBox(topCheckPoint.position, topCheckSize, 0, topLayer);
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetAxisRaw("Horizontal") != 0 && LastOnGroundTime == 0.2f)
         {
             SetSpeed(squatSpeed);
@@ -295,7 +296,7 @@ public class PlayerMovement : MonoBehaviour
                 item.enabled = true;
         }
 
-        if(PlayerCombat.IsAttacking == false && PlayerCombat.IsStrongAttacking == false && AnimHandler.IsSquating == false && !Physics2D.OverlapBox(topCheckPoint.position, topCheckSize, 0, groundLayer))
+        if(PlayerCombat.IsAttacking == false && PlayerCombat.IsStrongAttacking == false && AnimHandler.IsSquating == false && !Physics2D.OverlapBox(topCheckPoint.position, topCheckSize, 0, topLayer))
         {
             SetSpeed(normalSpeed);
             foreach (Collider2D item in positionSquat)

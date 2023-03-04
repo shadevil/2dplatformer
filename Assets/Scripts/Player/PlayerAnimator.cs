@@ -64,7 +64,7 @@ public class PlayerAnimator : MonoBehaviour
 
     private void CheckAnimationState()
     {
-        if (currentState == Names.DeathFromThorns)
+        if (currentState == Names.DeathFromThorns || currentState == Names.Death)
         {
             return;
         }
