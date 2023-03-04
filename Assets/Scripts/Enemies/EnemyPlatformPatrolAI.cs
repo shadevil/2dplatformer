@@ -2,15 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Enemy : MonoBehaviour, IDamageable
+public class EnemyPlatformPatrolAI : PlatformPatrolAI, IDamageable
 {
-    [SerializeField] private Vector3 _runTrigger = new Vector3(3, 3);
-    [SerializeField] private Transform _player;
-    private Vector3 _playerPosition;
-    private Rigidbody2D _rb;
-
-    [SerializeField] private float _speed = 4f;
-
     [SerializeField] private int _maxHealth = 5;
     private int _currentHealth;
 
@@ -20,9 +13,6 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     private SpriteRenderer _sprite;
     private bool isGrounded = false;
     public static Vector3 _start_position;
-    private Animator _animator;
-
-    public float deltaAlpha = 1f;
 
     [SerializeField] private bool isCollidePlayer = false;
 
@@ -31,65 +21,35 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     private int attackDamage = 1;
     [SerializeField] private float attackRange = 0.5f;
-    private void FixedUpdate()
+
+    override protected void Start()
     {
-        CheckGround();
-    }
-    private void Start()
-    {
+        base.Start();
         _currentHealth = _maxHealth;
         _start_position = transform.position;
-        _playerPosition = _player.position;
-        _rb = GetComponent<Rigidbody2D>();
-        _animator = GetComponent<Animator>();
         GetComponent<BoxCollider2D>().enabled = true;
 
-        _rb.bodyType = RigidbodyType2D.Dynamic;
-        _animator.SetBool(Names.IsLive, true);
+        rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
+        animator.SetBool(Names.IsLive, true);
 
-        _sprite = GetComponentInChildren<SpriteRenderer>();
+        _sprite = GetComponent<SpriteRenderer>();
         Color color = _sprite.material.color;
         color.a = 1f;
         _sprite.material.color = color;
     }
-    protected virtual void Update()
+    override protected void Update()
     {
-        if (transform.position.x - _playerPosition.x >= _runTrigger.x)
-        {
-            Run();
-        }
-        else
-        {
-            if (isGrounded) _animator.SetBool(Names.Run, false);
-        }
-
+        base.Update();
         if (_currentHealth > 0)
-        {    
+        {
             if (_dazedTime <= 0)
-                _speed = 2f;
-            else 
+                speed = 2f;
+            else
             {
-                _speed = 0;
+                speed = 0;      
                 _dazedTime -= Time.deltaTime;
             }
         }
-    }
-    protected virtual void Run()
-    {
-        if (isGrounded) _animator.SetBool(Names.Run, true);
-
-        Vector3 _dir = _player.transform.position;
-        transform.position = Vector3.MoveTowards(transform.position, _dir, _speed * Time.deltaTime);
-        Vector3 scale = transform.localScale;
-        if (_dir.x - transform.position.x < 0.0f)
-            scale.x = -1;
-        else scale.x = 1;
-        transform.localScale = scale;
-    }
-    protected virtual void CheckGround()
-    {
-        Collider2D[] collider = Physics2D.OverlapCircleAll(transform.position, 0.3f);
-        isGrounded = collider.Length > 1;
     }
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
@@ -97,13 +57,13 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         if (collision.gameObject.TryGetComponent(out Hero hero))
         {
             isCollidePlayer = true;
-            _animator.SetTrigger(Names.Attack);
+            animator.SetTrigger(Names.Attack);
         }
     }
 
     protected virtual void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.TryGetComponent(out Hero hero))       
+        if (collision.gameObject.TryGetComponent(out Hero hero))
             isCollidePlayer = true;
     }
 
@@ -115,7 +75,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     public void ApplyDamage(int _damage)
     {
-        _animator.SetTrigger(Names.Damage);
+        animator.SetTrigger(Names.Damage);
         _currentHealth -= _damage;
         _dazedTime = _startDazedTime;
 
@@ -132,19 +92,19 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     }
 
     public void DieFromThorns()
-    { 
-    
+    {
+
     }
 
     IEnumerator CoroutineDie()
     {
-        _speed = 0;
-        _rb.bodyType = RigidbodyType2D.Kinematic;
+        speed = 0;
+        rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
         GetComponent<BoxCollider2D>().enabled = false;
-        _animator.SetBool(Names.IsLive, false);
+        animator.SetBool(Names.IsLive, false);
         yield return new WaitForSeconds(3f);
         StartCoroutine(InvisibleSprite());
-        
+
     }
     IEnumerator InvisibleSprite()
     {
@@ -177,4 +137,5 @@ public abstract class Enemy : MonoBehaviour, IDamageable
             return;
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
+
 }

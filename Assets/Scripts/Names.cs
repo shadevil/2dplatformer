@@ -29,7 +29,13 @@ public static class Names
     public static string Player = nameof(Player);
     public static string Enemy = nameof(Enemy);
 
-    [Header ("Inputs")]
+    #region INPUTS
     public static string Fire = nameof(Fire);
     public static string Horizontal = nameof(Horizontal);
+    #endregion
+
+    #region
+    public static string Wall = nameof(Wall);
+    public static string Ground = nameof(Ground);
+    #endregion
 }
