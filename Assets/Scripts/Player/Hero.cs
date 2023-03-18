@@ -7,18 +7,24 @@ using UnityEngine.Events;
 public class Hero : MonoBehaviour, IDamageable
 {
     [SerializeField] private float health = 5;
-    //private Rigidbody2D _rb;
+    private Rigidbody2D _rb;
     [SerializeField] private Vector2 pushingForse;
     [SerializeField] private PlayerAnimator animator;
 
+    [SerializeField] private Transform RightWallCheckPoint;
+    [SerializeField] private Transform LeftWallCheckPoint;
+
     private void Awake()
     {
-        //_rb = GetComponent<Rigidbody2D>();
+        _rb = GetComponent<Rigidbody2D>();
     }
 
     public void ApplyDamage(int damage)
     {
-        //_rb.AddForce(new Vector2(pushingForse.x * Input.GetAxis(Names.Horizontal), pushingForse.y), ForceMode2D.Impulse);
+        if(RightWallCheckPoint.position.x < LeftWallCheckPoint.position.x)
+        _rb.AddForce(new Vector2(pushingForse.x, pushingForse.y), ForceMode2D.Impulse);
+        else
+            _rb.AddForce(new Vector2(-pushingForse.x, pushingForse.y), ForceMode2D.Impulse);
         health -= damage;
         animator.ChangeAnimationState(Names.Damage);
 

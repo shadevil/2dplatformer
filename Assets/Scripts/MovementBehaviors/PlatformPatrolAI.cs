@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class PlatformPatrolAI : MonoBehaviour
 {
-	[SerializeField] protected float speed = 1f;
+	protected float speed;
+    [SerializeField] protected float startSpeed;
 
 	protected Rigidbody2D rigidbody2D;
 
@@ -15,6 +16,8 @@ public class PlatformPatrolAI : MonoBehaviour
 	{
 		rigidbody2D = GetComponent<Rigidbody2D>(); 
 		animator = GetComponent<Animator>();
+
+		speed = startSpeed;
 	}
 
 	protected virtual void Update()

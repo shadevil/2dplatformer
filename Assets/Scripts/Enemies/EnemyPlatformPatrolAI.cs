@@ -1,20 +1,19 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyPlatformPatrolAI : PlatformPatrolAI, IDamageable
 {
-    [SerializeField] private int _maxHealth = 5;
-    private int _currentHealth;
+    [SerializeField] private int maxHealth = 5;
+    private int currentHealth;
 
-    private float _dazedTime;
-    [SerializeField] float _startDazedTime;
+    private bool isLive = true;
 
-    private SpriteRenderer _sprite;
+    private float dazedTime;
+    [SerializeField] float startDazedTime;
+
+    private SpriteRenderer sprite;
     private bool isGrounded = false;
-    public static Vector3 _start_position;
-
-    [SerializeField] private bool isCollidePlayer = false;
+    public static Vector3 startPosition;
 
     [SerializeField] private Transform attackPoint;
     [SerializeField] private LayerMask playerLayer;
@@ -25,67 +24,77 @@ public class EnemyPlatformPatrolAI : PlatformPatrolAI, IDamageable
     override protected void Start()
     {
         base.Start();
-        _currentHealth = _maxHealth;
-        _start_position = transform.position;
+        currentHealth = maxHealth;
+        startPosition = transform.position;
         GetComponent<BoxCollider2D>().enabled = true;
 
         rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
         animator.SetBool(Names.IsLive, true);
 
-        _sprite = GetComponent<SpriteRenderer>();
-        Color color = _sprite.material.color;
+        sprite = GetComponent<SpriteRenderer>();
+        Color color = sprite.material.color;
         color.a = 1f;
-        _sprite.material.color = color;
+        sprite.material.color = color;
     }
     override protected void Update()
     {
         base.Update();
-        if (_currentHealth > 0)
+        if (currentHealth > 0)
         {
-            if (_dazedTime <= 0)
-                speed = 2f;
+            if (dazedTime <= 0)
+                speed = startSpeed;
             else
             {
                 speed = 0;      
-                _dazedTime -= Time.deltaTime;
+                dazedTime -= Time.deltaTime;
             }
         }
     }
 
-    protected virtual void OnCollisionEnter2D(Collision2D collision)
+    protected void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.TryGetComponent(out Hero hero))
         {
-            isCollidePlayer = true;
             animator.SetTrigger(Names.Attack);
         }
     }
 
-    protected virtual void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.gameObject.TryGetComponent(out Hero hero))
-            isCollidePlayer = true;
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.TryGetComponent(out Hero hero))
-            isCollidePlayer = false;
-    }
+    //protected void OnCollisionStay2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.TryGetComponent(out Hero hero))
+    //    {
+    //        isCollidePlayer = true;
+    //        animator.SetTrigger(Names.Attack);
+    //    }
+    //}
 
     public void ApplyDamage(int _damage)
     {
-        animator.SetTrigger(Names.Damage);
-        _currentHealth -= _damage;
-        _dazedTime = _startDazedTime;
+        isLive = currentHealth > 0;
 
-        if (_currentHealth <= 0)
+        if (isLive)
+        {       
+            animator.SetTrigger(Names.Damage);
+            currentHealth -= _damage;
+            dazedTime = startDazedTime;
+        }
+
+        if (currentHealth <= 0)
         {
             Die();
         }
 
     }
 
+    protected virtual void PlayerApplyDamage()
+    {
+            Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, playerLayer);
+            foreach (Collider2D damageableObject in hitObjects)
+            {
+                //StartCoroutine(Wait());
+                damageableObject.GetComponent<Hero>().ApplyDamage(attackDamage);
+            }
+    }
     public void Die()
     {
         StartCoroutine(CoroutineDie());
@@ -110,26 +119,14 @@ public class EnemyPlatformPatrolAI : PlatformPatrolAI, IDamageable
     {
         for (float f = 1f; f >= -0.05f; f -= 0.05f)
         {
-            Color color = _sprite.material.color;
+            Color color = sprite.material.color;
             color.a = f;
-            _sprite.material.color = color;
+            sprite.material.color = color;
             yield return new WaitForSeconds(0.05f);
         }
         Destroy(gameObject);
     }
 
-    protected virtual void PlayerApplyDamage()
-    {
-        if (isCollidePlayer)
-        {
-            Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, playerLayer);
-            foreach (Collider2D damageableObject in hitObjects)
-            {
-                //StartCoroutine(Wait());
-                damageableObject.GetComponent<Hero>().ApplyDamage(attackDamage);
-            }
-        }
-    }
 
     private void OnDrawGizmosSelected()
     {
