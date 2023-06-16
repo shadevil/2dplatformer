@@ -18,7 +18,7 @@ public class EnemyPlatformPatrolAI : PlatformPatrolAI, IDamageable
     [SerializeField] private Transform attackPoint;
     [SerializeField] private LayerMask playerLayer;
 
-    private int attackDamage = 1;
+    [SerializeField] private int attackDamage = 1;
     [SerializeField] private float attackRange = 0.5f;
 
     override protected void Start()
@@ -28,7 +28,6 @@ public class EnemyPlatformPatrolAI : PlatformPatrolAI, IDamageable
         startPosition = transform.position;
         GetComponent<BoxCollider2D>().enabled = true;
 
-        rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
         animator.SetBool(Names.IsLive, true);
 
         sprite = GetComponent<SpriteRenderer>();
@@ -53,7 +52,7 @@ public class EnemyPlatformPatrolAI : PlatformPatrolAI, IDamageable
 
     protected void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.TryGetComponent(out Hero hero))
+        if (collision.gameObject.TryGetComponent(out PlayerHealth hero))
         {
             animator.SetTrigger(Names.Attack);
         }
@@ -61,7 +60,7 @@ public class EnemyPlatformPatrolAI : PlatformPatrolAI, IDamageable
 
     //protected void OnCollisionStay2D(Collision2D collision)
     //{
-    //    if (collision.gameObject.TryGetComponent(out Hero hero))
+    //    if (collision.gameObject.TryGetComponent(out PlayerHealth hero))
     //    {
     //        isCollidePlayer = true;
     //        animator.SetTrigger(Names.Attack);
@@ -92,7 +91,7 @@ public class EnemyPlatformPatrolAI : PlatformPatrolAI, IDamageable
             foreach (Collider2D damageableObject in hitObjects)
             {
                 //StartCoroutine(Wait());
-                damageableObject.GetComponent<Hero>().ApplyDamage(attackDamage);
+                damageableObject.GetComponent<PlayerHealth>().ApplyDamage(attackDamage, IsFacingRight());
             }
     }
     public void Die()
@@ -100,10 +99,6 @@ public class EnemyPlatformPatrolAI : PlatformPatrolAI, IDamageable
         StartCoroutine(CoroutineDie());
     }
 
-    public void DieFromThorns()
-    {
-
-    }
 
     IEnumerator CoroutineDie()
     {

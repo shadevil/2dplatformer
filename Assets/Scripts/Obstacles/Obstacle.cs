@@ -18,7 +18,7 @@ public class Obstacle : MonoBehaviour
 
     internal virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.TryGetComponent(out IDamageable damageable))
+        if (collision.gameObject.TryGetComponent(out IPlayerDamageable damageable))
         {
             damageable.DieFromThorns();
         }

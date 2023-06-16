@@ -4,28 +4,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Hero : MonoBehaviour, IDamageable
+public class PlayerHealth : MonoBehaviour, IPlayerDamageable
 {
     [SerializeField] private float health = 5;
     private Rigidbody2D _rb;
     [SerializeField] private Vector2 pushingForse;
-    [SerializeField] private PlayerAnimator animator;
+    private PlayerAnimator animator;
 
-    [SerializeField] private Transform RightWallCheckPoint;
-    [SerializeField] private Transform LeftWallCheckPoint;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
     }
 
-    public void ApplyDamage(int damage)
+    private void Start()
     {
-        if(RightWallCheckPoint.position.x < LeftWallCheckPoint.position.x)
+        animator = GetComponent<PlayerAnimator>();
+    }
+
+    public void ApplyDamage(int damageValue, bool isFasingRight)
+    {
+        if(isFasingRight)
         _rb.AddForce(new Vector2(pushingForse.x, pushingForse.y), ForceMode2D.Impulse);
         else
             _rb.AddForce(new Vector2(-pushingForse.x, pushingForse.y), ForceMode2D.Impulse);
-        health -= damage;
+        health -= damageValue;
         animator.ChangeAnimationState(Names.Damage);
 
         if (health <= 0)
@@ -43,8 +46,6 @@ public class Hero : MonoBehaviour, IDamageable
     {
         animator.ChangeAnimationState(Names.DeathFromThorns);
     }
-
- 
 }
 
 

@@ -7,5 +7,4 @@ interface IDamageable
     void ApplyDamage(int damageValue);
 
     void Die();
-    void DieFromThorns();
 }

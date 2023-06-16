@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
-        if (!_player) _player = FindObjectOfType<Hero>().transform;
+        if (!_player) _player = FindObjectOfType<PlayerHealth>().transform;
     }
     private void Update()
     {

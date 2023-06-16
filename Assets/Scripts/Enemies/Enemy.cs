@@ -31,10 +31,9 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     private int attackDamage = 1;
     [SerializeField] private float attackRange = 0.5f;
-    private void FixedUpdate()
-    {
-        CheckGround();
-    }
+
+    public bool IsFasingRight { get; set; } = true;
+
     private void Start()
     {
         _currentHealth = _maxHealth;
@@ -64,15 +63,20 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         }
 
         if (_currentHealth > 0)
-        {    
+        {
             if (_dazedTime <= 0)
                 _speed = 2f;
-            else 
+            else
             {
                 _speed = 0;
                 _dazedTime -= Time.deltaTime;
             }
         }
+    }
+
+    private void FixedUpdate()
+    {
+        CheckGround();
     }
     protected virtual void Run()
     {
@@ -80,12 +84,25 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
         Vector3 _dir = _player.transform.position;
         transform.position = Vector3.MoveTowards(transform.position, _dir, _speed * Time.deltaTime);
+        Turn(_dir);
+    }
+
+    private void Turn(Vector3 dir)
+    {
         Vector3 scale = transform.localScale;
-        if (_dir.x - transform.position.x < 0.0f)
+        if (dir.x - transform.position.x < 0.0f)
+        {
             scale.x = -1;
-        else scale.x = 1;
+            IsFasingRight = false;
+        }
+        else
+        {
+            scale.x = 1;
+            IsFasingRight = true;
+        }
         transform.localScale = scale;
     }
+
     protected virtual void CheckGround()
     {
         Collider2D[] collider = Physics2D.OverlapCircleAll(transform.position, 0.3f);
@@ -94,7 +111,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.TryGetComponent(out Hero hero))
+        if (collision.gameObject.TryGetComponent(out PlayerHealth hero))
         {
             isCollidePlayer = true;
             _animator.SetTrigger(Names.Attack);
@@ -103,13 +120,13 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     protected virtual void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.TryGetComponent(out Hero hero))       
+        if (collision.gameObject.TryGetComponent(out PlayerHealth hero))
             isCollidePlayer = true;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.TryGetComponent(out Hero hero))
+        if (collision.gameObject.TryGetComponent(out PlayerHealth hero))
             isCollidePlayer = false;
     }
 
@@ -132,8 +149,8 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     }
 
     public void DieFromThorns()
-    { 
-    
+    {
+
     }
 
     IEnumerator CoroutineDie()
@@ -144,7 +161,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         _animator.SetBool(Names.IsLive, false);
         yield return new WaitForSeconds(3f);
         StartCoroutine(InvisibleSprite());
-        
+
     }
     IEnumerator InvisibleSprite()
     {
@@ -166,7 +183,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
             foreach (Collider2D damageableObject in hitObjects)
             {
                 //StartCoroutine(Wait());
-                damageableObject.GetComponent<Hero>().ApplyDamage(attackDamage);
+                damageableObject.GetComponent<PlayerHealth>().ApplyDamage(attackDamage, IsFasingRight);
             }
         }
     }
